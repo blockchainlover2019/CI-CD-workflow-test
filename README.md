@@ -1,1 +1,1 @@
-# ratio-contracts
+# stable-pool contracts
