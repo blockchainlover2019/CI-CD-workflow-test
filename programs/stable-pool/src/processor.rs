@@ -15,5 +15,8 @@ pub use process_deposit_collateral::*;
 pub mod process_deposit_collateral;
 pub use process_deposit_collateral::*;
 
-pub mod process_mint_usdr;
-pub use process_mint_usdr::*;
+pub mod process_borrow_usd;
+pub use process_borrow_usd::*;
+
+pub mod process_repay_usd;
+pub use process_repay_usd::*;
