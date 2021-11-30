@@ -25,8 +25,6 @@ pub fn process_faucet_usdc_usdr_lp(ctx: Context<FaucetUsdcUsdrLp>,  state_nonce:
     let signer = &[&signer_seeds[..]];
 
     let cpi_ctx = CpiContext::new_with_signer(cpi_program, cpi_accounts, signer);
-
     token::mint_to(cpi_ctx, LP_USDC_USDR_AMOUNT)?;
-
     Ok(())
 }
