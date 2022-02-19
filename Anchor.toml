@@ -3,7 +3,7 @@ stable_pool = "7ikNrDUaBf1Vk6KUagXzRvEz1Nhsep1PjixcqJH4vdSk"
 stable_pool_faucet = "HBdT3RTpVY86wcvYXxetNmLcUczAjSr9JuenadoY8dEV"
 
 [programs.devnet]
-stable_pool = "7kKokDY8zXMpWgN8yUrBKqvwoB57vXPhzGDC4dJDvWER"
+stable_pool = "rT22BzUhpVDPtkheuc7DgMWBNNteWyuWfJ7Ao2e44FD"
 stable_pool_faucet = "J7UG1WFxyh7EPjKaksaoWYFAymU2gyG2VHQ9mm75X4Tk"
 
 [programs.mainnet]
@@ -20,5 +20,6 @@ wallet = "./.config/testUser-super-keypair.json"
 [scripts]
 admin-panel = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/admin-panel.spec.ts"
 analyze = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 analyze/analyze.ts"
+create-vault = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/create-vault.ts"
 saber-test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/saber/saber-test.ts"
 test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/ratio/ratio.spec.ts"
