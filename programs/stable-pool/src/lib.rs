@@ -120,7 +120,7 @@ pub mod stable_pool {
 
     #[access_control(is_secure(&ctx.accounts.global_state))]
     pub fn borrow_usd(
-        ctx: Context<BorrowUsd>,
+        ctx: Context<BorrowUsdr>,
         amount: u64,
         user_usd_token_nonce: u8,
     ) -> ProgramResult {

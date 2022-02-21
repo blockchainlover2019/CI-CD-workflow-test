@@ -320,7 +320,7 @@ pub struct HarvestReward<'info> {
 
 #[derive(Accounts)]
 #[instruction(amount: u64, user_usd_token_nonce: u8)]
-pub struct BorrowUsd<'info> {
+pub struct BorrowUsdr<'info> {
     #[account(mut)]
     pub authority: Signer<'info>,
 
