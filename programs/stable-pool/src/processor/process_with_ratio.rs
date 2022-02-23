@@ -5,12 +5,11 @@ use crate::{constant::*, error::*, instructions::*, utils::*};
 
 impl<'info> CreateTrove<'info> {
     /// Claims rewards from saber farm
-    pub fn create(&mut self, trove_nonce: u8, ata_trove_nonce: u8, ceiling: u64) -> ProgramResult {
+    pub fn create(&mut self, trove_nonce: u8, ata_trove_nonce: u8) -> ProgramResult {
         self.trove.locked_coll_balance = 0;
         self.trove.debt = 0;
         self.trove.trove_nonce = trove_nonce;
         self.trove.ata_trove_nonce = ata_trove_nonce;
-        self.trove.debt_ceiling = ceiling;
 
         Ok(())
     }
@@ -157,7 +156,11 @@ impl<'info> BorrowUsdr<'info> {
             self.global_state.total_debt,
             amount,
         )?;
-        assert_user_debt_ceiling_not_exceeded(self.trove.debt_ceiling, self.trove.debt, amount)?;
+        assert_user_debt_ceiling_not_exceeded(
+            self.global_state.user_debt_ceiling,
+            self.trove.debt,
+            amount,
+        )?;
 
         let cur_timestamp = self.clock.unix_timestamp as u64;
 

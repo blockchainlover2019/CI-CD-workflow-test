@@ -19,6 +19,7 @@ impl<'info> CreateGlobalState<'info> {
         self.global_state.tvl = 0;
         self.global_state.total_debt = 0;
         self.global_state.debt_ceiling = debt_ceiling;
+        self.global_state.user_debt_ceiling = 0;
         self.global_state.fee_num = DEFAULT_FEE_NUMERATOR;
         self.global_state.fee_deno = DEFAULT_FEE_DENOMINATOR;
         self.global_state.coll_per_risklv = DEFAULT_RATIOS;
@@ -76,7 +77,7 @@ impl<'info> SetVaultDebtCeiling<'info> {
 
 impl<'info> SetUserDebtCeiling<'info> {
     pub fn set(&mut self, ceiling: u64) -> ProgramResult {
-        self.trove.debt_ceiling = ceiling;
+        self.global_state.user_debt_ceiling = ceiling;
         Ok(())
     }
 }

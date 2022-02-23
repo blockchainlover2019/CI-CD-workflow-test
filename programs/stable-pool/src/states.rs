@@ -12,7 +12,8 @@ pub struct GlobalState {
     pub tvl: u64,
     pub paused: u8,
     pub total_debt: u64,
-    pub debt_ceiling: u64,
+    pub debt_ceiling: u64, // will be renamed to global_debt_ceiling later
+    pub user_debt_ceiling: u64,
     pub fee_num: u128,
     pub fee_deno: u128,
     pub coll_per_risklv: [u64; 10],
@@ -54,7 +55,6 @@ pub struct Trove {
     pub reward_token_b: Pubkey,
     pub locked_coll_balance: u64,
     pub debt: u64,
-    pub debt_ceiling: u64,
     pub trove_nonce: u8,
     pub ata_trove_nonce: u8,
     pub token_coll: Pubkey,

@@ -99,9 +99,8 @@ pub mod stable_pool {
         ctx: Context<CreateTrove>,
         trove_nonce: u8,
         ata_trove_nonce: u8,
-        ceiling: u64,
     ) -> ProgramResult {
-        ctx.accounts.create(trove_nonce, ata_trove_nonce, ceiling)
+        ctx.accounts.create(trove_nonce, ata_trove_nonce)
     }
     pub fn create_user_reward_vault(
         ctx: Context<CreateUserRewardVault>,

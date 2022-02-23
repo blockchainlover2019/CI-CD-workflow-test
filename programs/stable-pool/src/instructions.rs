@@ -495,14 +495,10 @@ pub struct SetVaultDebtCeiling<'info> {
     pub vault: Account<'info, Vault>,
 }
 
-// who is setting the debt ceiling, and for which user(s)?
-// Do we really need a function to set the debt ceiling for individual users?
-// This seems very tedious
 #[derive(Accounts)]
 pub struct SetUserDebtCeiling<'info> {
     #[account(mut)]
     pub authority: Signer<'info>,
-    pub user: AccountInfo<'info>,
 
     #[account(
         mut,
@@ -511,24 +507,6 @@ pub struct SetUserDebtCeiling<'info> {
         has_one = authority,
     )]
     pub global_state: Account<'info, GlobalState>,
-
-    // why is this mutable? it is a token mint created by another entity
-    #[account(mut, constraint = mint_coll.key() == vault.mint_coll)]
-    pub mint_coll: Account<'info, Mint>,
-
-    #[account(
-        mut,
-        seeds = [VAULT_SEED, mint_coll.key().as_ref()],
-        bump = vault.vault_bump,
-    )]
-    pub vault: Account<'info, Vault>,
-
-    #[account(
-        mut,
-        seeds = [TROVE_SEED,vault.key().as_ref(), user.key().as_ref()],
-        bump = trove.trove_nonce,
-    )]
-    pub trove: Account<'info, Trove>,
 }
 
 #[derive(Accounts)]
