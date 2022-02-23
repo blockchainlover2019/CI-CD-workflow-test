@@ -138,7 +138,7 @@ impl<'info> HarvestReward<'info> {
     }
 }
 
-impl<'info> BorrowUsd<'info> {
+impl<'info> BorrowUsdr<'info> {
     pub fn borrow(&mut self, amount: u64, user_usd_token_nonce: u8) -> ProgramResult {
         let lp_price = self.price_feed.price;
         assert_debt_allowed(
