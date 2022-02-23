@@ -27,9 +27,10 @@ pub mod stable_pool {
         mint_usd_nonce: u8,
         tvl_limit: u64,
         debt_ceiling: u64,
+        user_debt_ceiling: u64,
     ) -> ProgramResult {
         ctx.accounts
-            .create_state(global_state_nonce, mint_usd_nonce, tvl_limit, debt_ceiling)
+            .create_state(global_state_nonce, mint_usd_nonce, tvl_limit, debt_ceiling, user_debt_ceiling)
     }
 
     pub fn create_vault(
