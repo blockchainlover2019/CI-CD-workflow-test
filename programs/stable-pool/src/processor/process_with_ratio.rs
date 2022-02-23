@@ -49,6 +49,8 @@ impl<'info> RatioStaker<'info> {
         Ok(())
     }
     pub fn withdraw(&mut self, amount: u64) -> ProgramResult {
+        require!(self.trove.debt == 0, StablePoolError::NotAllowed);
+        
         let mut _amount = amount;
         if amount > self.trove.locked_coll_balance {
             _amount = self.trove.locked_coll_balance;

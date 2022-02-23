@@ -11,6 +11,7 @@ impl<'info> CreateGlobalState<'info> {
         debt_ceiling: u64,
     ) -> ProgramResult {
         self.global_state.authority = self.authority.key();
+        self.global_state.treasury = self.authority.key();
         self.global_state.mint_usd = self.mint_usd.key();
         self.global_state.global_state_nonce = global_state_nonce;
         self.global_state.mint_usd_nonce = mint_usd_nonce;
@@ -113,6 +114,13 @@ impl<'info> SetCollateralRatio<'info> {
             let (i, ratio_val) = item;
             self.global_state.coll_per_risklv[i] = *ratio_val;
         }
+        Ok(())
+    }
+}
+
+impl<'info> ChangeTreasuryWallet<'info> {
+    pub fn change_treasury(&mut self) -> ProgramResult {
+        self.global_state.treasury = self.new_treasury.key();
         Ok(())
     }
 }

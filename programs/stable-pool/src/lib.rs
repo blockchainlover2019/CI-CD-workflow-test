@@ -15,9 +15,7 @@ pub mod utils;
 use crate::{instructions::*, processor::*, utils::*};
 
 declare_id!("7kKokDY8zXMpWgN8yUrBKqvwoB57vXPhzGDC4dJDvWER");
-pub mod site_fee_owner {
-    anchor_lang::declare_id!("2Pv5mjmKYAtXNpr3mcsXf7HjtS3fieJeFoWPATVT5rWa");
-}
+
 #[program]
 pub mod stable_pool {
     use super::*;
@@ -61,6 +59,10 @@ pub mod stable_pool {
     // no tests yet
     pub fn change_authority(ctx: Context<ChangeAuthority>) -> ProgramResult {
         ctx.accounts.change_owner()
+    }
+
+    pub fn change_treasury(ctx: Context<ChangeTreasuryWallet>) -> ProgramResult {
+        ctx.accounts.change_treasury()
     }
 
     pub fn set_global_tvl_limit(ctx: Context<SetGlobalTvlLimit>, limit: u64) -> ProgramResult {

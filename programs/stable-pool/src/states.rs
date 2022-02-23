@@ -4,6 +4,7 @@ use anchor_lang::prelude::*;
 #[derive(Default)]
 pub struct GlobalState {
     pub authority: Pubkey,
+    pub treasury: Pubkey,
     pub mint_usd: Pubkey,
     pub global_state_nonce: u8,
     pub mint_usd_nonce: u8,

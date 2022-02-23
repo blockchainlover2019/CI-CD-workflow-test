@@ -3,7 +3,7 @@ use quarry_mine::Rewarder;
 // local
 use anchor_spl::token::{self, Mint, Token, TokenAccount};
 
-use crate::{constant::*, site_fee_owner, states::*};
+use crate::{constant::*, states::*};
 
 #[derive(Accounts)]
 #[instruction(global_state_nonce: u8, mint_usd_nonce: u8, tvl_limit: u64, debt_ceiling: u64)]
@@ -91,6 +91,21 @@ pub struct ChangeAuthority<'info> {
     )]
     pub global_state: Account<'info, GlobalState>,
     pub new_owner: AccountInfo<'info>,
+}
+
+#[derive(Accounts)]
+pub struct ChangeTreasuryWallet<'info> {
+    #[account(mut)]
+    pub authority: Signer<'info>,
+
+    #[account(
+        mut,
+        seeds = [GLOBAL_STATE_SEED],
+        bump = global_state.global_state_nonce,
+        has_one = authority
+    )]
+    pub global_state: Account<'info, GlobalState>,
+    pub new_treasury: SystemAccount<'info>
 }
 
 #[derive(Accounts)]
@@ -304,7 +319,7 @@ pub struct HarvestReward<'info> {
 
     #[account(
         mut,
-        constraint = reward_fee_token.owner == site_fee_owner::ID,
+        constraint = reward_fee_token.owner == global_state.treasury,
         constraint = reward_fee_token.mint == vault.reward_mint_a,
     )]
     pub reward_fee_token: Box<Account<'info, TokenAccount>>,
@@ -373,7 +388,7 @@ pub struct BorrowUsdr<'info> {
     // why is this mutable? it is a token mint created by another entity
     #[account(mut, constraint = mint_coll.key() == vault.mint_coll)]
     pub mint_coll: Account<'info, Mint>,
-    
+
     #[account(address = token::ID)]
     pub token_program: Program<'info, Token>,
     pub rent: Sysvar<'info, Rent>,
