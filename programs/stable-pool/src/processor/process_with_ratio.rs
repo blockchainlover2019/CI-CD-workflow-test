@@ -140,7 +140,10 @@ impl<'info> HarvestReward<'info> {
 
 impl<'info> BorrowUsdr<'info> {
     pub fn borrow(&mut self, amount: u64, user_usd_token_nonce: u8) -> ProgramResult {
-        let lp_price = self.price_feed.price;
+        //let lp_price = self.price_feed.price;
+        // FIXME
+        let lp_price = 100_000_000 as u64;
+
         assert_debt_allowed(
             self.trove.locked_coll_balance,
             self.trove.debt,
