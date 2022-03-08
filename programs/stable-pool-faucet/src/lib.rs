@@ -12,6 +12,5 @@ pub mod stable_pool_faucet {
     }
 }
 
-
 #[derive(Accounts)]
 pub struct Initialize {}
