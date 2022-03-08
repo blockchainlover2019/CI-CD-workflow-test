@@ -14,9 +14,70 @@ env:
   NODE_VERSION: 17.0.1
   
 jobs:
+  base-test:
+    name: Base Tests
+    runs-on: ubuntu-18.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/setup/
+      - uses: actions/setup-node@v2
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - uses: actions/cache@v2
+        name: Cache Cargo registry + index
+        id: cache-cargo-build
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            ./target/
+          key: cargo-${{ runner.os }}-cargo-build-${{ hashFiles('**/Cargo.lock') }}
+      - run: cargo build
+      - run: cargo fmt -- --check
+      - run: cargo clippy --all-targets -- -D warnings
+      - run: rustup toolchain install nightly --profile minimal --component clippy
+      - run: cargo +nightly clippy --all-targets -- -D warnings
+      - run: cargo test
+      - run: yarn
+      - run: yarn lint
+
+  setup-anchor-cli:
+    name: Setup Anchor cli
+    runs-on: ubuntu-18.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/setup/
+      - uses: ./.github/actions/setup-anchor
+      - uses: actions/upload-artifact@v2
+        with:
+          name: anchor-binary
+          path: ~/.cargo/bin/anchor
+
+  setup-solana-cli:
+    name: Setup Solana cli
+    runs-on: ubuntu-18.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/setup-solana
+
+  unit-test-ratio:
+    name: Unit Test(Ratio)
+    runs-on: ubuntu-18.04
+    needs: setup-anchor-cli
+    needs: setup-solana-cli
+    steps:
+      - run: anchor test
+
   coverage:
+    needs: setup-anchor-cli
+    needs: setup-solana-cli
     name: Soteria Coverage Test
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
