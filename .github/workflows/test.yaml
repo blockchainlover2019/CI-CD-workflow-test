@@ -1,0 +1,25 @@
+on:
+  push:
+    branches: [ main, main-transition ]
+  pull_request:
+    branches: [ main, main-transition ]
+
+env:
+  CARGO_TERM_COLOR: always
+  SOLANA_CLI_VERSION: 1.8.6
+  NODE_VERSION: 17.0.1
+  
+jobs:
+  coverage:
+    name: Soteria Coverage Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/setup-soteria
+      - uses: ./.github/actions/setup-solana
+      - run: cargo build-bpf
+      - run: pwd
+        shell: bash
+      - name: Coverage Test
+        run: soteria -analyzeAll .
+  
