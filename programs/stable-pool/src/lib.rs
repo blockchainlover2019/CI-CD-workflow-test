@@ -1,36 +1,36 @@
+// libraries
 use anchor_lang::prelude::*;
-
-/// constant
-pub mod constant;
-/// error
-pub mod error;
-/// instructions
+// local imports
+pub mod constants;
+pub mod enums;
+pub mod errors;
 pub mod instructions;
-///processor
-pub mod processor;
-/// states
 pub mod states;
-/// utils
 pub mod utils;
-use crate::{instructions::*, processor::*, utils::*};
 
-declare_id!("61TAXTt2Kt7erSWarrdhCXbqfFrWmLJ2opGMeWjeeXaH");
+use crate::instructions::*;
+use crate::utils::is_global_state_paused;
+
+declare_id!("FvTjLbwbHY4v8Gfv18JKuPCJG2Hj87CG8kPNHqGeHAR4");
 
 #[program]
 pub mod stable_pool {
     use super::*;
 
-    // admin panel
     pub fn create_global_state(
         ctx: Context<CreateGlobalState>,
-        global_state_nonce: u8,
-        mint_usd_nonce: u8,
+        global_state_bump: u8,
+        mint_usdr_bump: u8,
         tvl_limit: u64,
         debt_ceiling: u64,
-        user_debt_ceiling: u64,
-    ) -> ProgramResult {
-        ctx.accounts
-            .create_state(global_state_nonce, mint_usd_nonce, tvl_limit, debt_ceiling, user_debt_ceiling)
+    ) -> Result<()> {
+        create_global_state::handle(
+            ctx,
+            global_state_bump,
+            mint_usdr_bump,
+            tvl_limit,
+            debt_ceiling,
+        )
     }
 
     pub fn create_vault(
@@ -40,130 +40,42 @@ pub mod stable_pool {
         is_dual: u8,
         debt_ceiling: u64,
         platform_type: u8,
-    ) -> ProgramResult {
-        ctx.accounts
-            .create_vault(vault_bump, risk_level, is_dual, debt_ceiling, platform_type)
+    ) -> Result<()> {
+        create_vault::handle(
+            ctx,
+            vault_bump,
+            risk_level,
+            is_dual,
+            debt_ceiling,
+            platform_type,
+        )
     }
 
-    pub fn set_harvest_fee(
-        ctx: Context<SetHarvestFee>,
-        fee_num: u64,
-        fee_deno: u64,
-    ) -> ProgramResult {
-        ctx.accounts.set_fee(fee_num, fee_deno)
-    }
-
-    pub fn toggle_emer_state(ctx: Context<ToggleEmerState>, new_state: u8) -> ProgramResult {
-        ctx.accounts.toggle_state(new_state)
-    }
-
-    // no tests yet
-    pub fn change_authority(ctx: Context<ChangeAuthority>) -> ProgramResult {
-        ctx.accounts.change_owner()
-    }
-
-    pub fn change_treasury(ctx: Context<ChangeTreasuryWallet>) -> ProgramResult {
-        ctx.accounts.change_treasury()
-    }
-
-    pub fn set_global_tvl_limit(ctx: Context<SetGlobalTvlLimit>, limit: u64) -> ProgramResult {
-        ctx.accounts.set_tvl_limit(limit)
-    }
-
-    pub fn set_global_debt_ceiling(
-        ctx: Context<SetGlobalDebtCeiling>,
-        ceiling: u64,
-    ) -> ProgramResult {
-        ctx.accounts.set(ceiling)
-    }
-
-    pub fn set_vault_debt_ceiling(
-        ctx: Context<SetVaultDebtCeiling>,
-        ceiling: u64,
-    ) -> ProgramResult {
-        ctx.accounts.set(ceiling)
-    }
-
-    pub fn set_user_debt_ceiling(ctx: Context<SetUserDebtCeiling>, ceiling: u64) -> ProgramResult {
-        ctx.accounts.set(ceiling)
-    }
-
-    pub fn set_collaterial_ratio(
-        ctx: Context<SetCollateralRatio>,
-        ratios: [u64; 10],
-    ) -> ProgramResult {
-        ctx.accounts.set_ratio(&ratios)
-    }
-
-    // user section
     pub fn create_trove(
         ctx: Context<CreateTrove>,
-        trove_nonce: u8,
-        ata_trove_nonce: u8,
-    ) -> ProgramResult {
-        ctx.accounts.create(trove_nonce, ata_trove_nonce)
-    }
-    pub fn create_user_reward_vault(
-        ctx: Context<CreateUserRewardVault>,
-        reward_vault_bump: u8,
-    ) -> ProgramResult {
-        ctx.accounts.create()
+        trove_bump: u8,
+        ata_trove_bump: u8,
+        ceiling: u64,
+    ) -> Result<()> {
+        create_trove::handle(ctx, trove_bump, ata_trove_bump, ceiling)
     }
 
-    #[access_control(is_secure(&ctx.accounts.global_state))]
-    pub fn deposit_collateral(ctx: Context<RatioStaker>, amount: u64) -> ProgramResult {
-        ctx.accounts.deposit(amount)
+    pub fn deposit_collateral(ctx: Context<DepositCollateral>, deposit_amount: u64) -> Result<()> {
+        deposit_collateral::handle(ctx, deposit_amount)
+    }
+    pub fn withdraw_collateral(
+        ctx: Context<WithdrawCollateral>,
+        withdraw_amount: u64,
+    ) -> Result<()> {
+        withdraw_collateral::handle(ctx, withdraw_amount)
     }
 
-    #[access_control(is_secure(&ctx.accounts.global_state))]
-    pub fn withdraw_collateral(ctx: Context<RatioStaker>, amount: u64) -> ProgramResult {
-        ctx.accounts.withdraw(amount)
-    }
-
-    #[access_control(is_secure(&ctx.accounts.global_state))]
-    pub fn borrow_usd(
+    /// THIS IS NOT COMPLETE, please see note on the contract fxn (search `BorrowUsdr<'info>`)
+    #[access_control(is_global_state_paused(&ctx.accounts.global_state))]
+    pub fn borrow_usdr(
         ctx: Context<BorrowUsdr>,
-        amount: u64,
-        user_usd_token_nonce: u8,
-    ) -> ProgramResult {
-        ctx.accounts.borrow(amount, user_usd_token_nonce)
-    }
-
-    #[access_control(is_secure(&ctx.accounts.global_state))]
-    pub fn repay_usd(ctx: Context<RepayUsd>, amount: u64) -> ProgramResult {
-        ctx.accounts.repay(amount)
-    }
-
-    // quarry miner
-    pub fn create_quarry_miner(
-        ctx: Context<CreateQuarryMiner>,
-        miner_bump: u8,
-        miner_vault_bump: u8,
-    ) -> ProgramResult {
-        ctx.accounts.create(miner_bump, miner_vault_bump)
-    }
-
-    // saber functions
-    #[access_control(is_secure(&ctx.accounts.ratio_staker.global_state))]
-    pub fn deposit_to_saber(ctx: Context<SaberStaker>, amount: u64) -> ProgramResult {
-        ctx.accounts.deposit(amount)
-    }
-
-    #[access_control(is_secure(&ctx.accounts.ratio_staker.global_state))]
-    pub fn withdraw_from_saber(ctx: Context<SaberStaker>, amount: u64) -> ProgramResult {
-        ctx.accounts.withdraw(amount)
-    }
-
-    #[access_control(is_secure(&ctx.accounts.ratio_harvester.global_state))]
-    pub fn harvest_from_saber(ctx: Context<HarvestFromSaber>) -> ProgramResult {
-        ctx.accounts.harvest()
-    }
-
-    #[access_control(is_secure(&ctx.accounts.global_state))]
-    pub fn create_price_feed(ctx: Context<CreatePriceFeed>, pair_count: u8) -> ProgramResult {
-        ctx.accounts.create_price_feed(pair_count)
-    }
-    pub fn update_price_feed(ctx: Context<UpdatePriceFeed>) -> ProgramResult {
-        ctx.accounts.update_price_feed()
+        borrow_amount: u64,
+    ) -> Result<()> {
+        borrow_usdr::handle(ctx, borrow_amount)
     }
 }

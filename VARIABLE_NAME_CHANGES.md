@@ -46,20 +46,20 @@ super(owner) -> authority
 | ----------- | ----------- |
 | mint_coll         | mint |
 | mintColl          | mint |
-| collateral_mint   | mint_coll |
-| collateralMint    | mintColl |
-| localUserCollKey  | userColl & users.base.ataLpSaber.pubKey |
-| localTokenCollKey | users.base.ataLpSaber.pubKey |
-| userTokenColl     | users.base.ataLpSaber.pubKey |
-| user_token_coll   | ata_user_coll |
-| tokenCollNonce    | token_coll_nonce & user.ataLpSaber.bump |
+| collateral_mint   | mint |
+| collateralMint    | mint |
+| localUserCollKey  | ata_user & users.base.ataLpSaber.pubKey |
+| localTokenCollKey | ata_user & users.base.ataLpSaber.pubKey |
+| userTokenColl     | ata_user & users.base.ataLpSaber.pubKey |
+| user_token_coll   | ata_user |
+| tokenCollNonce    | ata_user_bump & user.ataLpSaber.bump |
 
 ### constants
 
 | Before      | After |
 | ----------- | ----------- |
-| USD_MINT_TAG | MINT_USD_SEED |
-| usd-mint (value) | MINT_USD_SEED |
+| USD_MINT_TAG | MINT_USDR_SEED |
+| usd-mint (value) | MINT_USDR_SEED |
 
 <br>
 
@@ -122,18 +122,18 @@ super(owner) -> authority
 
 <br>
 
-# USD
+# USDr
 
 | Before      | After |
 | ----------- | ----------- |
-| user_token_usd | ata_user_usd |
-| userTokenUsd | ataUserUsd |
-| userUsdKey | ataUserUsd |
-| user_usd_key | ata_user_usd |
+| user_token_usd | ata_user_usdr |
+| userTokenUsd | ataUserUsdr |
+| userUsdKey | ataUserUsdr |
+| user_usd_key | ata_user_usdr |
 
 ### constants
 
 | Before      | After |
 | ----------- | ----------- |
-| USER_USD_TOKEN_TAG | USER_USD_SEED |
-| usd-token (value) | USER_USD_SEED |
+| USER_USD_TOKEN_TAG | USER_USDR_SEED |
+| usd-token (value) | USER_USDR_SEED |

@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
 
-#[error]
+#[error_code]
 pub enum StablePoolError {
     #[msg("You are not authorized to perform this action.")]
     Unauthorized,
