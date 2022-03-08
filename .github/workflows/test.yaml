@@ -19,11 +19,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - uses: ./.github/actions/setup
       - uses: ./.github/actions/setup-soteria
-        name: Install Soteria
       - uses: ./.github/actions/setup-solana
-        name: Install Solana
-      - run: cargo build-bpf
+      - uses: ./.github/actions/setup-anchor
+      - run: anchor test
       - run: pwd
         shell: bash
       - name: Coverage Test
