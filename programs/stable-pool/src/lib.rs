@@ -12,7 +12,7 @@ use crate::instructions::*;
 use crate::utils::is_global_state_paused;
 
 declare_id!("FvTjLbwbHY4v8Gfv18JKuPCJG2Hj87CG8kPNHqGeHAR4");
-
+ 
 #[program]
 pub mod stable_pool {
     use super::*;
