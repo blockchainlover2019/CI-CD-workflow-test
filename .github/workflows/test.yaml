@@ -70,24 +70,20 @@ jobs:
     runs-on: ubuntu-18.04
     needs: [setup-anchor-cli, setup-solana-cli]
     steps:
+      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/setup-solana
+      - uses: ./.github/actions/setup-anchor
       - run: anchor test
 
   coverage:
-    needs: setup-anchor-cli
+    needs: unit-test-ratio
     name: Soteria Coverage Test
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: ${{ env.NODE_VERSION }}
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/setup-soteria
       - uses: ./.github/actions/setup-solana
-      - uses: ./.github/actions/setup-anchor
-      - run: anchor test
-      - run: pwd
-        shell: bash
       - name: Coverage Test
         run: soteria -analyzeAll .
   
