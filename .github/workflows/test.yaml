@@ -68,14 +68,12 @@ jobs:
   unit-test-ratio:
     name: Unit Test(Ratio)
     runs-on: ubuntu-18.04
-    needs: setup-anchor-cli
-    needs: setup-solana-cli
+    needs: [setup-anchor-cli, setup-solana-cli]
     steps:
       - run: anchor test
 
   coverage:
     needs: setup-anchor-cli
-    needs: setup-solana-cli
     name: Soteria Coverage Test
     runs-on: ubuntu-18.04
     steps:
