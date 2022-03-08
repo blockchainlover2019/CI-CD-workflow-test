@@ -1,8 +1,12 @@
 on:
   push:
-    branches: [ main, main-transition ]
+    branches: 
+      - main
+      - main-transition
   pull_request:
-    branches: [ main, main-transition ]
+    branches:
+      - main
+      - main-transition
 
 env:
   CARGO_TERM_COLOR: always
