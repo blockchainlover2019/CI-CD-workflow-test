@@ -16,7 +16,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: ./.github/actions/setup-soteria
+        name: Install Soteria
       - uses: ./.github/actions/setup-solana
+        name: Install Solana
       - run: cargo build-bpf
       - run: pwd
         shell: bash
