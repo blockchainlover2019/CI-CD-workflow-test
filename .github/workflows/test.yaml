@@ -44,31 +44,14 @@ jobs:
       - run: yarn
       - run: yarn lint
 
-  setup-anchor-cli:
-    name: Setup Anchor cli
-    runs-on: ubuntu-18.04
-    timeout-minutes: 30
-    steps:
-      - uses: actions/checkout@v2
-      - uses: ./.github/actions/setup/
-      - uses: ./.github/actions/setup-anchor
-      - uses: actions/upload-artifact@v2
-        with:
-          name: anchor-binary
-          path: ~/.cargo/bin/anchor
-
   unit-test-ratio:
     name: Unit Test(Ratio)
     runs-on: ubuntu-18.04
-    needs: setup-anchor-cli
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/download-artifact@v2
-        with:
-          name: anchor-binary
-          path: ~/.cargo/bin/
       - uses: ./.github/actions/setup
       - uses: ./.github/actions/setup-solana
+      - uses: ./.github/actions/setup-anchor
       - run: anchor test
 
   coverage:
