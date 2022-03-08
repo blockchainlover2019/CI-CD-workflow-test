@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
 use quarry_mine::Rewarder;
-// local
+
 use anchor_spl::token::{self, Mint, Token, TokenAccount};
 
 use crate::{constant::*, states::*};
