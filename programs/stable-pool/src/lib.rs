@@ -1,4 +1,4 @@
-// libraries 
+// libraries
 use anchor_lang::prelude::*;
 // local imports
 pub mod constants;
